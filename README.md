@@ -6,8 +6,8 @@ This repo contains the code for executing the quantum fuzzy inference engine pro
     in Information Sciences, 2021, doi: 10.1016/j.ins.2021.06.049.''**
 
 
-# Examples
-This is a basic example to use HQGA to solve Sphere problem on Qasm Simulator.
+# Example
+This is a basic example to use HQGA for solving Sphere problem on Qasm Simulator.
 
 ```python
 from HQGA import problems as p, hqga_utils, utils, hqga_algorithm
