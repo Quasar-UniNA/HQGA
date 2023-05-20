@@ -10,6 +10,7 @@ setup(
   license='MIT',     
   description = 'A library for implementing HQGA',  
   long_description=readme,
+  long_description_content_type="text/markdown",
   author = 'Autilia Vitiello',                  
   author_email = 'autilia.vitiello@unina.it',      
   url = 'https://github.com/Quasar-UniNA/HQGA',   
