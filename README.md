@@ -6,19 +6,6 @@ This repo contains the code for executing the quantum fuzzy inference engine pro
     in Information Sciences, 2021, doi: 10.1016/j.ins.2021.06.049.''**
 
 
-## How to install
-
-The package can be installed with Python's pip package manager.
-
-```bash
-git clone https://github.com/Quasar-UniNA/HQGA.git HQGA
-cd HQGA
-pip install .
-```
-
-This process will copy the `HQGA` library to your environment python path.
-
-
 
 ## Credits
 
