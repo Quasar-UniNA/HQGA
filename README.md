@@ -6,6 +6,34 @@ This repo contains the code for executing the quantum fuzzy inference engine pro
     in Information Sciences, 2021, doi: 10.1016/j.ins.2021.06.049.''**
 
 
+# Examples
+This is a basic example to use HQGA to solve Sphere problem on Qasm Simulator.
+
+```python
+from HQGA import problems as p, hqga_utils, utils, hqga_algorithm
+from HQGA.utils import computeHammingDistance
+
+from qiskit import Aer
+import math
+
+simulator = Aer.get_backend('qasm_simulator')
+device_features= hqga_utils.device(simulator, False)
+
+circuit = hqga_utils.setupCircuit(params.pop_size, problem.dim * problem.num_bit_code)
+
+params= hqga_utils.ReinforcementParameters(3, 5, math.pi / 16, math.pi / 16, 0.3)
+params.draw_circuit=True
+
+problem = p.SphereProblem(num_bit_code=5)
+
+gBest, chromosome_evolution,bests = hqga_algorithm.runQGA(dev_features, circuit, params,problem)
+
+dist=computeHammingDistance(gBest.chr, problem)
+print("The Hamming distance to the optimum value is: ", dist)
+utils.writeBestsXls("Bests.xlsx", bests)
+utils.writeChromosomeEvolutionXls("ChromosomeEvolution.xlsx", chromosome_evolution)
+```
+
 
 ## Credits
 
