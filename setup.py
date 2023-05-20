@@ -6,7 +6,7 @@ with open('README.md') as f:
 setup(
   name = 'HQGA',         
   packages = ['HQGA'],   
-  version = '0.1.0',      
+  version = 'v0.1.0',      
   license='MIT',     
   description = 'A library for implementing HQGA',  
   long_description=readme,
