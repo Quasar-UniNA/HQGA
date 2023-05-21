@@ -3,7 +3,7 @@ name: Publish ${package_name} to PyPI / GitHub
 on:
   push:
     tags:
-      - "v*"
+      - "v0.1.0"
 
 
 jobs:
@@ -26,7 +26,7 @@ jobs:
           python -m build
           twine check --strict dist/*
       - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v0.1.0
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
