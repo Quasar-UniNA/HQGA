@@ -19,14 +19,14 @@ import math
 simulator = Aer.get_backend('qasm_simulator')
 device_features= hqga_utils.device(simulator, False)
 
-circuit = hqga_utils.setupCircuit(params.pop_size, problem.dim * problem.num_bit_code)
-
 params= hqga_utils.ReinforcementParameters(3, 5, math.pi / 16, math.pi / 16, 0.3)
 params.draw_circuit=True
 
 problem = p.SphereProblem(num_bit_code=5)
 
-gBest, chromosome_evolution,bests = hqga_algorithm.runQGA(dev_features, circuit, params,problem)
+circuit = hqga_utils.setupCircuit(params.pop_size, problem.dim * problem.num_bit_code)
+
+gBest, chromosome_evolution,bests = hqga_algorithm.runQGA(device_features, circuit, params,problem)
 
 dist=computeHammingDistance(gBest.chr, problem)
 print("The Hamming distance to the optimum value is: ", dist)
