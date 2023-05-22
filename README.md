@@ -4,7 +4,15 @@ This repo contains the code for executing Hybrid Quantum Genetic Algorithm (HQGA
 
 **''G. Acampora and A. Vitiello, "Implementing evolutionary optimization on actual quantum processors,"
     in Information Sciences, 2021, doi: 10.1016/j.ins.2021.06.049.''**
+    
+    
+## How to install
 
+The package can be installed with Python's pip package manager.
+
+```bash
+pip install HQGA
+```
 
 # Example
 This is a basic example to use HQGA for solving Sphere problem on Qasm Simulator.
