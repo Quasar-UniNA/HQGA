@@ -6,7 +6,7 @@ with open('README.md') as f:
 setup(
   name = 'HQGA',         
   packages = ['HQGA'],   
-  version = 'v0.2.0',      
+  version = 'v0.3.1',      
   license='MIT',     
   description = 'A library for implementing Hybrid Quantum Genetic Algorithm (HQGA)',  
   long_description=readme,
@@ -19,10 +19,8 @@ setup(
 'matplotlib', 
 'numpy',
 'openpyxl==3.1.2',
-'qiskit==0.42.0',
-'qiskit_aer==0.12.0',
-'qiskit_ibmq_provider==0.20.2',
-'qiskit_terra==0.23.2',
+'qiskit>=1.0.0',
+'qiskit_ibm_runtime==0.35.0',
 'sympy',
 'tqdm'
       ],
