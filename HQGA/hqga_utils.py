@@ -35,10 +35,10 @@ class globalBest:
         print("Its fitness value is: ", self.fitness)
         print("The fitness evaluations to obtain the best: ", self.gen)
 
-def fromQtoC(max_counts):
+def fromQtoC(max_counts, num_genes):
     """Function that returns the classical chromosomes starting from the outcome of the quantum circuit"""
     max_counts = ''.join(reversed(max_counts))
-    classical_chromosomes=max_counts.split(" ")
+    classical_chromosomes= [max_counts[i:i+num_genes] for i in range(0, len(max_counts), num_genes)]
     return classical_chromosomes
 
 
@@ -64,9 +64,8 @@ def setupCircuit(number_of_populations, gene_per_chromosome):
 
     for i in range(number_of_populations):
         circuit.add_register(QuantumRegister(gene_per_chromosome))
-
-    for i in range(number_of_populations):
-        circuit.add_register(ClassicalRegister(gene_per_chromosome))
+        
+    circuit.add_register(ClassicalRegister(number_of_populations*gene_per_chromosome, name="c"))
 
     return circuit
 
@@ -148,20 +147,20 @@ def applyMultiRotationOnList(circuit, theta, list_qubit):
 
 
 def applyEntanglementOnList(circuit, index_best, list_entang, theta):
-    """Function that adds cnot gates to implement crossover"""
+    """Function that adds cx gates to implement crossover"""
     qr1 = circuit.qregs[index_best]
     i=0
     for q in list_entang:
-        circuit.cnot(qr1[i], q)
+        circuit.cx(qr1[i], q)
         theta[q]=theta[qr1[i]]
         i+=1
 
 
-def applyMeasureOperator(circuit):
+def applyMeasureOperator(circuit, num_genes):
     """Function that adds measurement gates to the quantum circuit"""
-    for quantum_classical_registers in zip(circuit.qregs, circuit.cregs):
-        for qubit_bit in zip(quantum_classical_registers[0], quantum_classical_registers[1]):
-         circuit.measure(qubit_bit[0], qubit_bit[1])
+    for i, quantum_registers in enumerate(circuit.qregs):
+        start = i * num_genes  # Offset nel registro classico
+        circuit.measure(quantum_registers, range(start,start + num_genes))
 
 def applyMultiHadamardOnList(circuit, list_qubit):
     """Function that adds hadamard gates to the quantum circuit"""
