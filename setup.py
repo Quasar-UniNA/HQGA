@@ -6,7 +6,7 @@ with open('README.md') as f:
 setup(
   name = 'HQGA',         
   packages = ['HQGA'],   
-  version = 'v0.3.2',      
+  version = 'v0.3.3',      
   license='MIT',     
   description = 'A library for implementing Hybrid Quantum Genetic Algorithm (HQGA)',  
   long_description=readme,
