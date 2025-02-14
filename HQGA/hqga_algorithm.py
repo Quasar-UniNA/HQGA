@@ -46,7 +46,7 @@ def runQGA(device_features,circuit, params,problem):
             hqga_utils.applyMutationOnListWithinRange(circuit, params.prob_mut, list_qubit_mutation, theta)
         circuit.barrier()
 
-        hqga_utils.applyMeasureOperator(circuit)
+        hqga_utils.applyMeasureOperator(circuit, problem.dim*problem.num_bit_code)
         # Draw the circuit
         if params.draw_circuit:
             print(circuit.draw(output="text", fold=300))
