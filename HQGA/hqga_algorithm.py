@@ -1,7 +1,9 @@
-from qiskit import execute
+from qiskit.transpiler.preset_passmanagers import generate_preset_pass_manager
+from qiskit_ibm_runtime import SamplerV2 as Sampler
 import copy
 from tqdm import tqdm
 from qiskit.providers.jobstatus import JOB_FINAL_STATES
+import numpy as np
 
 from HQGA import hqga_utils
 
@@ -45,7 +47,7 @@ def runQGA(device_features,circuit, params,problem):
             hqga_utils.applyMutationOnListWithinRange(circuit, params.prob_mut, list_qubit_mutation, theta)
         circuit.barrier()
 
-        hqga_utils.applyMeasureOperator(circuit)
+        hqga_utils.applyMeasureOperator(circuit, problem.dim*problem.num_bit_code)
         # Draw the circuit
         if params.draw_circuit:
             print(circuit.draw(output="text", fold=300))
@@ -55,13 +57,20 @@ def runQGA(device_features,circuit, params,problem):
         while True:
             circuit.name =str(params.qobj_id)+str(gen)
             try:
-                if device_features.real:
-                    job = execute(circuit, device_features.device, shots=params.num_shots)
+                if device_features.coupling_map!=None:
+                    pm = generate_preset_pass_manager(optimization_level=3,
+                                        backend=device_features.device)
+
+                    transpiled_circuit = pm.run(circuit)
+                    pub= (transpiled_circuit)
                 else:
-                    job = execute(circuit, device_features.device, noise_model=device_features.noise_model,
-                               coupling_map=device_features.coupling_map,
-                               basis_gates=device_features.basis_gates, shots=params.num_shots)
-                while job.status() not in JOB_FINAL_STATES:
+                    pub= (circuit)
+
+                sampler = Sampler(mode=device_features.device)
+                # pub= (transpiled_circuit)
+                job = sampler.run([pub], shots=1)
+
+                while (job.status() not in JOB_FINAL_STATES) and (job.status() not in ['DONE', 'CANCELLED', 'ERROR']): 
                     #print(job.status())
                     pass
                 # Grab results from the job
@@ -70,14 +79,14 @@ def runQGA(device_features,circuit, params,problem):
                 break
             except Exception as e:
                 print(e)
+        counts = result[0].data.c.get_counts()
+        #print(counts)
 
-        # Returns counts
-        counts = result.get_counts(circuit)
         #print("\nCounts:",counts)
         #print("len counts ", len(counts))
 
         #compute fitness evaluation
-        classical_chromosomes= hqga_utils.fromQtoC(hqga_utils.getMaxProbKey(counts))
+        classical_chromosomes= hqga_utils.fromQtoC(hqga_utils.getMaxProbKey(counts), problem.dim*problem.num_bit_code)
         if params.verbose:
             print("\nChromosomes", classical_chromosomes)
 
@@ -133,4 +142,5 @@ def runQGA(device_features,circuit, params,problem):
     gBest.display()
     print("The number of fitness evaluations is: ", params.pop_size*(params.max_gen+1))
     return gBest, chromosome_evolution,bests
+
 
