@@ -35,12 +35,11 @@ class globalBest:
         print("Its fitness value is: ", self.fitness)
         print("The fitness evaluations to obtain the best: ", self.gen)
 
-def fromQtoC(max_counts):
+def fromQtoC(max_counts, num_genes):
     """Function that returns the classical chromosomes starting from the outcome of the quantum circuit"""
     max_counts = ''.join(reversed(max_counts))
-    classical_chromosomes=max_counts.split(" ")
+    classical_chromosomes= [max_counts[i:i+num_genes] for i in range(0, len(max_counts), num_genes)]
     return classical_chromosomes
-
 
 def computeFitnesses(classical_chromosomes, fitness_f):
     """Function that returns the fitness values of the classical chromosomes"""
@@ -64,10 +63,11 @@ def setupCircuit(number_of_populations, gene_per_chromosome):
 
     for i in range(number_of_populations):
         circuit.add_register(QuantumRegister(gene_per_chromosome))
+    circuit.add_register(ClassicalRegister(number_of_populations*gene_per_chromosome, name="c"))
 
-    for i in range(number_of_populations):
+    '''for i in range(number_of_populations):
         circuit.add_register(ClassicalRegister(gene_per_chromosome))
-
+'''
     return circuit
 
 def resetCircuit(circuit):
@@ -152,16 +152,25 @@ def applyEntanglementOnList(circuit, index_best, list_entang, theta):
     qr1 = circuit.qregs[index_best]
     i=0
     for q in list_entang:
-        circuit.cnot(qr1[i], q)
+        circuit.cx(qr1[i], q)
         theta[q]=theta[qr1[i]]
         i+=1
 
 
-def applyMeasureOperator(circuit):
+def applyMeasureOperator(circuit, num_genes):
     """Function that adds measurement gates to the quantum circuit"""
-    for quantum_classical_registers in zip(circuit.qregs, circuit.cregs):
+    # circuit.measure_all()
+    i=0
+    for quantum_registers in circuit.qregs:
+        start = i * num_genes  # Offset nel registro classico
+        circuit.measure(quantum_registers, range(start,start + num_genes))
+        # print(start)
+        # print(start + num_genes)
+        i += 1
+
+    ''' for quantum_classical_registers in circuit.qregs:
         for qubit_bit in zip(quantum_classical_registers[0], quantum_classical_registers[1]):
-         circuit.measure(qubit_bit[0], qubit_bit[1])
+         circuit.measure(qubit_bit[0], qubit_bit[1])'''
 
 def applyMultiHadamardOnList(circuit, list_qubit):
     """Function that adds hadamard gates to the quantum circuit"""
@@ -250,9 +259,8 @@ class ReinforcementParameters(Parameters):
 
 class device():
     """Class that defines the information related to the device where HQGA will be run"""
-    def __init__(self, device, isReal=False,noise_model=None, coupling_map=None, basis_gates=None):
+    def __init__(self, device, num_qubits=None, coupling_map=None, basis_gates=None):
         self.device=device
-        self.noise_model=noise_model
-        self.coupling_map= coupling_map
-        self.basis_gates=basis_gates
-        self.real=isReal
+        self.num_qubits=device.num_qubits
+        self.coupling_map=device.coupling_map
+        self.basis_gates=device.operation_names
