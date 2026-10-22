@@ -6,7 +6,7 @@ with open('README.md') as f:
 setup(
   name = 'HQGA',         
   packages = ['HQGA'],   
-  version = 'v0.2.0',      
+  version = 'v0.4.0',      
   license='MIT',     
   description = 'A library for implementing Hybrid Quantum Genetic Algorithm (HQGA)',  
   long_description=readme,
@@ -16,15 +16,13 @@ setup(
   url = 'https://github.com/Quasar-UniNA/HQGA',   
   keywords = ['Optimization Algorithms', 'Quantum Computing', 'Evolutionary Algorithms'],   
   install_requires=[            
-'matplotlib', 
-'numpy',
-'openpyxl==3.1.2',
-'qiskit==0.42.0',
-'qiskit_aer==0.12.0',
-'qiskit_ibmq_provider==0.20.2',
-'qiskit_terra==0.23.2',
-'sympy',
-'tqdm'
+'matplotlib>=3.10.3', 
+'numpy>=2.5.1',
+'openpyxl>=3.1.5',
+'qiskit>=2.5.2',
+'qiskit_ibm_runtime>=0.48.0',
+'sympy>=1.14.0',
+'tqdm>=4.65.0'
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',      
